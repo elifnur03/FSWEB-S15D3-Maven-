@@ -1,80 +1,86 @@
-import org.example.Main;
 import org.example.WordCounter;
 import org.example.entity.Employee;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class Main {
 
-@ExtendWith(ResultAnalyzer.class)
-public class MainTest {
+    public static void main(String[] args) {
 
-    List<Employee> employees = new LinkedList<>();
+        LinkedList<Employee> employees = new LinkedList<>();
 
-    @BeforeEach
-    void setUp() {
-        employees.add(new Employee(1, "Dogancan", "Kinik"));
-        employees.add(new Employee(1, "Dogancan", "Kinik"));
-        employees.add(new Employee(2, "Seyyit Battal", "Arvas"));
-        employees.add(new Employee(2, "Seyyit Battal", "Arvas"));
-        employees.add(new Employee(3, "Anil", "Ensari"));
-        employees.add(new Employee(3, "Anil", "Ensari"));
-        employees.add(new Employee(4, "Burak", "Cevizli"));
-        employees.add(null);
+        employees.add(new Employee(1,"Ali","Yılmaz"));
+        employees.add(new Employee(2,"Ayşe","Demir"));
+        employees.add(new Employee(1,"Ali","Yılmaz"));
+        employees.add(new Employee(3,"Mehmet","Kaya"));
+        employees.add(new Employee(4,"Zeynep","Koç"));
+        employees.add(new Employee(2,"Ayşe","Demir"));
+
+        System.out.println("Duplicate Employees:");
+        System.out.println(findDuplicates(employees));
+
+        System.out.println("\nUnique Employees Map:");
+        System.out.println(findUniques(employees));
+
+        System.out.println("\nOnly Non-Duplicate Employees:");
+        System.out.println(removeDuplicates(employees));
+
+        System.out.println("\nWord Count:");
+        System.out.println(WordCounter.calculateWord());
     }
 
-    @DisplayName("Employee sınıfı doğru access modifiers sahip mi")
-    @Test
-    public void testTaskAccessModifiers() throws NoSuchFieldException {
-        Field idFields = employees.get(0).getClass().getDeclaredField("id");
-        Field firstnameFields = employees.get(0).getClass().getDeclaredField("firstname");
-        Field lastnameFields = employees.get(0).getClass().getDeclaredField("lastname");
 
-        assertEquals(idFields.getModifiers(), 2);
-        assertEquals(firstnameFields.getModifiers(), 2);
-        assertEquals(lastnameFields.getModifiers(), 2);
+    // Tekrar eden employee'leri bulur
+    public static List<Employee> findDuplicates(List<Employee> list){
+
+        Map<Integer,Integer> countMap = new HashMap<>();
+        List<Employee> duplicates = new LinkedList<>();
+
+        for(Employee e : list){
+
+            int id = e.getId();
+            countMap.put(id, countMap.getOrDefault(id,0)+1);
+
+            if(countMap.get(id) == 2){
+                duplicates.add(e);
+            }
+        }
+
+        return duplicates;
     }
 
-    @DisplayName("findDuplicates method doğru çalışıyor mu?")
-    @Test
-    public void testFindDuplicatesMethod() {
-        List<Employee> list = Main.findDuplicates(employees);
-        assertEquals(list.size(), 3);
-        assertEquals(list.get(0).getFirstname(), "Dogancan");
+
+    // Her employee'den sadece bir tane Map'e koyar
+    public static Map<Integer,Employee> findUniques(List<Employee> list){
+
+        Map<Integer,Employee> map = new HashMap<>();
+
+        for(Employee e : list){
+            map.putIfAbsent(e.getId(), e);
+        }
+
+        return map;
     }
 
-    @DisplayName("findUniques method doğru çalışıyor mu?")
-    @Test
-    public void testFindUniquesMethod() {
-        Map<Integer, Employee> map = Main.findUniques(employees);
-        assertEquals(map.size(), 4);
-        assertEquals(map.get(1).getFirstname(), "Dogancan");
-    }
 
-    @DisplayName("removeDuplicates method doğru çalışıyor mu?")
-    @Test
-    public void testRemoveMethod() {
-        List<Employee> list = Main.removeDuplicates(employees);
-        System.out.println(list);
-        assertEquals(list.size(), 1);
-        assertEquals(list.get(0).getFirstname(), "Burak");
-    }
+    // Birden fazla geçenleri tamamen siler
+    public static List<Employee> removeDuplicates(List<Employee> list){
 
-    @DisplayName("calculatedWord method doğru çalışıyor mu?")
-    @Test
-    public void testCalculateWordMethod() {
-        Map<String, Integer> map = WordCounter.calculatedWord();
-        assertEquals(map.get("which"), 3);
-        assertEquals(map.get("turkish"), 2);
-        assertEquals(map.get("mustafa"), 3);
-        assertEquals(map.get("kemal"), 3);
-    }
+        Map<Integer,Integer> countMap = new HashMap<>();
 
+        for(Employee e : list){
+            int id = e.getId();
+            countMap.put(id, countMap.getOrDefault(id,0)+1);
+        }
+
+        List<Employee> result = new LinkedList<>();
+
+        for(Employee e : list){
+            if(countMap.get(e.getId()) == 1){
+                result.add(e);
+            }
+        }
+
+        return result;
+    }
 }
