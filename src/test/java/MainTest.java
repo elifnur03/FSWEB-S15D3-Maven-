@@ -9,12 +9,12 @@ class Main {
 
         LinkedList<Employee> employees = new LinkedList<>();
 
-        employees.add(new Employee(1,"Ali","Yılmaz"));
-        employees.add(new Employee(2,"Ayşe","Demir"));
-        employees.add(new Employee(1,"Ali","Yılmaz"));
-        employees.add(new Employee(3,"Mehmet","Kaya"));
-        employees.add(new Employee(4,"Zeynep","Koç"));
-        employees.add(new Employee(2,"Ayşe","Demir"));
+        employees.add(new Employee(1, "Ali", "Yılmaz"));
+        employees.add(new Employee(2, "Ayşe", "Demir"));
+        employees.add(new Employee(1, "Ali", "Yılmaz"));
+        employees.add(new Employee(3, "Mehmet", "Kaya"));
+        employees.add(new Employee(4, "Zeynep", "Koç"));
+        employees.add(new Employee(2, "Ayşe", "Demir"));
 
         System.out.println("Duplicate Employees:");
         System.out.println(findDuplicates(employees));
@@ -31,17 +31,17 @@ class Main {
 
 
     // Tekrar eden employee'leri bulur
-    public static List<Employee> findDuplicates(List<Employee> list){
+    public static List<Employee> findDuplicates(List<Employee> list) {
 
-        Map<Integer,Integer> countMap = new HashMap<>();
+        Map<Integer, Integer> countMap = new HashMap<>();
         List<Employee> duplicates = new LinkedList<>();
 
-        for(Employee e : list){
+        for (Employee e : list) {
 
             int id = e.getId();
-            countMap.put(id, countMap.getOrDefault(id,0)+1);
+            countMap.put(id, countMap.getOrDefault(id, 0) + 1);
 
-            if(countMap.get(id) == 2){
+            if (countMap.get(id) == 2) {
                 duplicates.add(e);
             }
         }
@@ -51,11 +51,11 @@ class Main {
 
 
     // Her employee'den sadece bir tane Map'e koyar
-    public static Map<Integer,Employee> findUniques(List<Employee> list){
+    public static Map<Integer, Employee> findUniques(List<Employee> list) {
 
-        Map<Integer,Employee> map = new HashMap<>();
+        Map<Integer, Employee> map = new HashMap<>();
 
-        for(Employee e : list){
+        for (Employee e : list) {
             map.putIfAbsent(e.getId(), e);
         }
 
@@ -64,19 +64,19 @@ class Main {
 
 
     // Birden fazla geçenleri tamamen siler
-    public static List<Employee> removeDuplicates(List<Employee> list){
+    public static List<Employee> removeDuplicates(List<Employee> list) {
 
-        Map<Integer,Integer> countMap = new HashMap<>();
+        Map<Integer, Integer> countMap = new HashMap<>();
 
-        for(Employee e : list){
+        for (Employee e : list) {
             int id = e.getId();
-            countMap.put(id, countMap.getOrDefault(id,0)+1);
+            countMap.put(id, countMap.getOrDefault(id, 0) + 1);
         }
 
         List<Employee> result = new LinkedList<>();
 
-        for(Employee e : list){
-            if(countMap.get(e.getId()) == 1){
+        for (Employee e : list) {
+            if (countMap.get(e.getId()) == 1) {
                 result.add(e);
             }
         }
